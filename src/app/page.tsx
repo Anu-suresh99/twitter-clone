@@ -66,7 +66,7 @@ const Home= () => {
               <div className="flex flex-col items-stretch h-full space-y-4">
               {NAVIGATION_ITEMS.map ((item)=>(
                   <Link className="hover:bg-white/30 text-2xl transition duration-200 flex items-center justify-start w-fit space-x-4 rounded-3xl py-2 px-6" 
-                   href= {'/${item.title.tolowercase()}'}key={item.title}>
+                   href= {`/${item.title.toLowerCase()}`}key={item.title}>
                      <div>
                        <item.icon />
                      </div>
