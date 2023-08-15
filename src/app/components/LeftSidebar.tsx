@@ -72,7 +72,7 @@ const leftsidebar = () => {
                   )
                 )
               } 
-              <button className="rounded-full  bg-primary p-4 text-2xl text-center hover:bg-opacity-70 transition duration-200">
+              <button className="rounded-full  bg-primary-foreground p-4 text-2xl text-center hover:bg-opacity-70 transition duration-200">
                 Post
               </button> 
               </div> 
