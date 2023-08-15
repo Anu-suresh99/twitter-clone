@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 
 import type { SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/lib/supabase";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "./components/ui/ui/dialog";
+import { Input } from "./node_modules/input";
+import { Button } from "./components/ui/ui/button";
 import { Toaster, toast } from "sonner";
 
 type SupabaseContext = {
