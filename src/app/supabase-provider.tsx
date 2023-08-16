@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import type { SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
 import type { Database } from "@/lib/supabase";
 import { Dialog, DialogContent } from "./components/ui/ui/dialog";
-import { Input } from "./node_modules/input";
+import { Input } from "./components/ui/ui/input";
 import { Button } from "./components/ui/ui/button";
 import { Toaster, toast } from "sonner";
 
@@ -96,25 +96,26 @@ export default function SupabaseProvider({
                 setIsLoading(false);
               }}
             >
-              <Input
-                type="email"
-                placeholder="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+             <Input
+              type="email"
+              placeholder="email"
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               />
+
               <Input
                 type="text"
                 placeholder="username"
                 min={3}
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
                 className="my-2"
               />
               <Input
                 type="text"
                 placeholder="your name"
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFullName(e.target.value)}
                 className="my-2"
               />
               <p className="text-sm text-gray-900 my-2">

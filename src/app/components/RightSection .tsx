@@ -4,7 +4,7 @@ import {BsSearch} from "react-icons/bs"
 const RightSection  = () => {
   return (
     <div>
-    <section className=" mt-2 w-[25%] sticky top2   flex flex-col items-stretch h-screen px-6">
+    <section className=" mt-2 w-[25%] sticky top2   xl:flex flex-col items-stretch h-screen px-6 hidden">
             <div>
               <div className="sticky top-2 w-full h-full ">
               

@@ -8,7 +8,7 @@ import {RiGroupLine} from 'react-icons/ri'
 import {GoVerified} from 'react-icons/go'
 import {BsPerson} from 'react-icons/bs'
 import {CgMoreO} from 'react-icons/cg'
-import Link from 'next/link'
+import Link from './next/link'
 
 const NAVIGATION_ITEMS=[
     {
@@ -59,7 +59,7 @@ const NAVIGATION_ITEMS=[
 
 const leftsidebar = () => {
   return (
-    <section className="sticky top-0 w-[25%] flex flex-col items-stretch h-screen px-4">
+    <section className="sticky top-0 w-[25%] xl:flex flex-col items-stretch h-screen px-4 hidden">
               <div className="flex flex-col items-stretch h-full space-y-4 mt-4">
               {NAVIGATION_ITEMS.map ((item)=>(
                   <Link className="hover:bg-white/30 text-2xl transition duration-200 flex items-center justify-start w-fit space-x-4 rounded-3xl py-2 px-6" 
