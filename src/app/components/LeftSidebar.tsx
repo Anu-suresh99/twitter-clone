@@ -8,7 +8,7 @@ import {RiGroupLine} from 'react-icons/ri'
 import {GoVerified} from 'react-icons/go'
 import {BsPerson} from 'react-icons/bs'
 import {CgMoreO} from 'react-icons/cg'
-import Link from './next/link'
+import {Link} from 'next/link';
 
 const NAVIGATION_ITEMS=[
     {
@@ -73,7 +73,7 @@ const leftsidebar = () => {
                 )
               } 
               <button className="rounded-full  bg-primary-foreground p-4 text-2xl text-center hover:bg-opacity-70 transition duration-200">
-                Post
+                Tweet
               </button> 
               </div> 
               <button className="rounded-full flex items-center space-x-2 m-4 bg-transparent p-4 text-center hover:bg-white/20 transition duration-200 w-full justify-between">
