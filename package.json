@@ -20,6 +20,7 @@
     "autoprefixer": "10.4.14",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.9",
     "dialog": "link:@/components/ui/dialog",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",

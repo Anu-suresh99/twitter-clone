@@ -1,11 +1,11 @@
 import React from 'react'
 import { createServerComponentClient} from '@supabase/auth-helpers-nextjs';
-import { Database } from 'lucide-react';
 import { cookies,headers} from 'next/headers';
 import { randomUUID } from 'crypto';
 import { AnyARecord } from 'dns';
-import FormClientComponent from './formClientComponent';
 import {SupabaseClient} from "@supabase/supabase-js";
+import { revalidatePath } from 'next/cache';
+import ComposeTweetForm from '../client-components/compose-tweet-form';
 
 const ComposeTweet = () => {
 
@@ -17,8 +17,8 @@ const ComposeTweet = () => {
 
    const SupabaseClient = createServerComponentClient {{ cookies,headers}};
 
-  const supabaseUrl= process.env.SUPABASE_URL
-  const supabaseSecretKey= process.env.SUPABASE_SECRET_KEY
+  const supabaseUrl= process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseSecretKey= process.env.SUPABASE_SECRET_KEY;
 
   if(!supabaseSecretKey|| !supabaseSecretKey)
       return{error:(message:"supabase credentials not provided")};
@@ -35,9 +35,12 @@ const ComposeTweet = () => {
     text: tweet.toString(),
     id: randomUUID()
   });
+
+  revalidatePath('/')
+
    return  {data,error};  
 }  
-  return ( <FormClientComponent serverAction={submitTweet} />);
-}
+  return ( <ComposeTweetForm serverAction={submitTweet} />);
+};
 
 export default ComposeTweet

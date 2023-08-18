@@ -5,9 +5,11 @@ import React from 'react'
 import { PostgrestError } from '@supabase/supabase-js';
 import { input} from "@node_modules/input";
 import {toast} from "sonner";
+import { type } from 'os';
+import { Button } from '../ui/ui/button';
 
 
-type FormClientComponentProps={
+type ComposeTweetFormProps={
 serverAction:{
   formdata:FormData
 } => Promise<
@@ -17,7 +19,10 @@ serverAction:{
 >;
 };
 
-const FormClientComponent = ({ serverAction }: FormClientComponentProps) => {
+const ComposeTweetForm = ({ serverAction }: ComposeTweetFormProps) => {
+
+const resetRef= useRef <HTMLButtonElement>(null)
+
   const handleSubmitTweet = async (data: any) => {
     const res = await serverAction(data);
 
@@ -25,6 +30,7 @@ const FormClientComponent = ({ serverAction }: FormClientComponentProps) => {
       toast.error(res.error.message);
     } else {
       toast.success("Tweet sent successfully");
+      resetRef.current?.click()
     }
   };
   return (
@@ -43,10 +49,12 @@ const FormClientComponent = ({ serverAction }: FormClientComponentProps) => {
               <button type= "submit" className="rounded-full  bg-primary px-4 py-2 w-full text-lg text-center hover:bg-opacity-70 transition duration-200 font-bold">
                 Tweet 
               </button>
+
+              <button ref={resetRef} classname="invisible" type="reset"></button>
             </div> 
          </div>
   </form>
   )
+  }
 
-
-export default FormClientComponent
+export default ComposeTweetForm
