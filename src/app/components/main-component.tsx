@@ -1,15 +1,20 @@
 
 import ComposeTweet from "./server-components/compose-tweet";
-import { getTweet } from "../lib/supabase/getTweet";
+import { getTweet } from "../lib/supabase/queries";
 import { dayjs } from "dayjs";
 import {relativeTime} from dayjs/plugin/relativeTime;
 import {Tweet} from "./components/client-components/tweet.tsx";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies,headers } from "next/headers";
 
 dayjs.extend (relativeTime)
    
 
 const MainComponent = async() => {
+
   const res = await getTweet();
+  const SupabaseClient = createServerComponentClient {{ cookies,headers}};
+  const{data:userData,error:userError}= await SupabaseClient.auth.getUser();
 return (
     <main className="sticky top-0 flex   xl:w [50%] max-w-[600px] h-full min-h-screen flex-col border-l-[0.5px] border-r-[0.5px] border-gray-400">
             <h1 className="text-xl font-bold p-6 backdrop-blur bg-white/10 sticky top-0">Home</h1>

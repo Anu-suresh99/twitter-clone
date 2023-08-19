@@ -1,16 +1,33 @@
+"use server"
+
 import React from 'react'
-import { BiChat, BiMessageRounded } from "react-icons/bi";
-import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
+import { BiMessageRounded } from "react-icons/bi";
+import {  AiOutlineRetweet } from "react-icons/ai";
 import {IoMdStats} from 'react-icons/io';
 import {FiShare} from 'react-icons/fi';
 import { BsDot, BsThreeDots } from "react-icons/bs";
 import { dayjs } from "dayjs";
-import { TweetType } from '@/app/lib/supabase/queries';
-
+import { Tweettype } from '@/app/lib/supabase/queries';
+import {createServerSupabaseClient,createServerComponentClient, SupabaseClient} from '@supabase/auth-helpers-nextjs';
+import LikeButton from './like-button';
+import { getLikeCount } from '@/app/lib/supabase/queries';
+import { isLiked } from '@/app/lib/supabase/queries';
+import { cookies,headers } from 'next/headers';
+import { tweet } from '@/compose-tweet'; 
 type TweetProps= {
-    tweet:TweetType
+    tweet:Tweettype
 }
-const Tweet = ({tweet}:TweetProps) => {
+const Tweet = async ({tweet}:TweetProps) => {
+
+
+  const supabaseServer= createServerSupabaseClient
+
+  const getTweetLikescount = await getLikeCount(tweet.id)
+  const isUserHasLiked = await isLiked({
+     tweetId:tweet.id,
+     userId:supabaseClient.auth.user
+  })
+
   return (
     <div key={tweet.id} className="border-b-[0.5px] p-4 border-gray-600 flex space-x-4 w-full overflow-hidden">
                          <div>
@@ -45,9 +62,12 @@ const Tweet = ({tweet}:TweetProps) => {
                              <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
                                     <AiOutlineRetweet /> 
                              </div>
-                             <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
-                                    <AiOutlineHeart /> 
-                             </div>
+
+                             <LikeButton 
+                             tweetId = {tweet.id}
+                             likeCount={getTweetLikescount.count}
+                             />
+                             
                              <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
                                     <IoMdStats /> 
                              </div>

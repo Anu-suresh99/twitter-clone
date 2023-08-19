@@ -6,24 +6,24 @@ import { revalidatePath } from "next/cache";
 import { db } from "../db";
 import { likes, replies, tweets } from "../db/schema";
 
-export const likeTweet = async ({
+export const likeTweet = async({
   tweetId,
-  userId,
-}: {
-  tweetId: string;
-  userId: string;
+  userId
+}:{
+  tweetId:string,
+  userId:string
 }) => {
-  await db
-    .insert(likes)
-    .values({
-      tweetId,
-      userId,
+
+  
+  const {data,error}= await supabaseServer.from('likes').insert({
+       id:randomUUID,
+       tweetid:tweetId,
+       userid:userId
     })
-    .catch((err:Error) => {
-      console.log(err);
-    });
-  revalidatePath("/");
-};
+    
+    console.log({data,error})
+  };
+
 
 export const unlikeTweet = async ({
   tweetId,
