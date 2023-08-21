@@ -5,6 +5,7 @@ import { supabaseServer } from ".";
 import { revalidatePath } from "next/cache";
 import { db } from "../db";
 import { likes, replies, tweets } from "../db/schema";
+import { revalidate } from "@/app/page";
 
 export const likeTweet = async({
   tweetId,
@@ -20,27 +21,26 @@ export const likeTweet = async({
        tweetid:tweetId,
        userid:userId
     })
-    
-    console.log({data,error})
+    revalidatePath ('/')
+    console.log({data,error});
   };
 
 
-export const unlikeTweet = async ({
-  tweetId,
-  userId,
-}: {
-  tweetId: string;
-  userId: string;
-}) => {
-  const { data, error } = await supabaseServer
-    .from("likes")
+  export const unlikeTweet = async({
+    tweetId,
+    userId
+  }:{
+    tweetId:string,
+    userId:string
+  }) => {
+    const {data,error}= await supabaseServer
+    .from('likes')
     .delete()
-    .eq("tweet_id", tweetId)
-    .eq("user_id", userId);
-
-  revalidatePath("/");
-  console.log({ data, error });
-};
+    .eq('tweetid',tweetId)
+    .eq('userid',userId)
+    revalidatePath ('/')
+    console.log({data,error});
+    };
 
 export const reply = async ({
   tweetId,

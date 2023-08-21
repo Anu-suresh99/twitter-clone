@@ -22,13 +22,13 @@ export const profiles = pgTable("profiles", {
 export type Profile = InferModel<typeof profiles>;
 
 export const profilesRelations = relations(profiles, ({ many }) => ({
-  tweets: many(tweets),
+  tweets: many(tweet),
   likes: many(likes),
   bookmarks: many(bookmarks),
   replies: many(replies),
 }));
 
-export const tweets = pgTable("tweets", {
+export const tweet = pgTable("tweet", {
   id: uuid("id").primaryKey().defaultRandom(),
   text: text("text").notNull(),
   profileId: uuid("profile_id")
@@ -37,21 +37,21 @@ export const tweets = pgTable("tweets", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   isReply: boolean("is_reply").notNull().default(false),
-  replyId: uuid("reply_id").references((): AnyPgColumn => tweets.id),
+  replyId: uuid("reply_id").references((): AnyPgColumn => tweet.id),
 });
 
-export type Tweet = InferModel<typeof tweets>;
+export type Tweet = InferModel<typeof tweet>;
 
-export const tweetsReplies = alias(tweets, "tweets_replies");
+export const tweetsReplies = alias(tweet, "tweet_replies");
 
-export const tweetsRelations = relations(tweets, ({ one }) => ({
+export const tweetsRelations = relations(tweet, ({ one }) => ({
   profile: one(profiles, {
-    fields: [tweets.profileId],
+    fields: [tweet.profileId],
     references: [profiles.id],
   }),
-  tweet: one(tweets, {
-    fields: [tweets.replyId],
-    references: [tweets.id],
+  tweet: one(tweet, {
+    fields: [tweet.replyId],
+    references: [tweet.id],
   }),
 }));
 
@@ -65,7 +65,7 @@ export const tweetHashtag = pgTable(
   {
     tweetId: uuid("tweet_id")
       .notNull()
-      .references(() => tweets.id),
+      .references(() => tweet.id),
     hashtagId: uuid("hashtag_id")
       .notNull()
       .references(() => hashtags.id),
@@ -84,7 +84,7 @@ export const replies = pgTable("replies", {
   userId: uuid("user_id")
     .notNull()
     .references(() => profiles.id),
-  tweetId: uuid("tweet_id").references(() => tweets.id),
+  tweetId: uuid("tweet_id").references(() => tweet.id),
   replyId: uuid("reply_id").references((): AnyPgColumn => replies.id), // self reference
 });
 
@@ -104,7 +104,7 @@ export const likes = pgTable(
       .references(() => profiles.id),
     tweetId: uuid("tweet_id")
       .notNull()
-      .references(() => tweets.id),
+      .references(() => tweet.id),
     created_at: timestamp("created_at").defaultNow().notNull(),
   },
   (likes) => ({
@@ -132,7 +132,7 @@ export const bookmarks = pgTable(
       .references(() => profiles.id)
       .notNull(),
     tweetId: uuid("tweet_id")
-      .references(() => tweets.id)
+      .references(() => tweet.id)
       .notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },

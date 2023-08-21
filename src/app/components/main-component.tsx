@@ -6,15 +6,19 @@ import {relativeTime} from dayjs/plugin/relativeTime;
 import {Tweet} from "./components/client-components/tweet.tsx";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies,headers } from "next/headers";
+import {SupabaseClient} from '@supabase/auth-helpers-nextjs';
 
 dayjs.extend (relativeTime)
    
 
 const MainComponent = async() => {
 
-  const res = await getTweet();
+  
   const SupabaseClient = createServerComponentClient {{ cookies,headers}};
   const{data:userData,error:userError}= await SupabaseClient.auth.getUser();
+  const res = await getTweet(userData.user.id);
+
+
 return (
     <main className="sticky top-0 flex   xl:w [50%] max-w-[600px] h-full min-h-screen flex-col border-l-[0.5px] border-r-[0.5px] border-gray-400">
             <h1 className="text-xl font-bold p-6 backdrop-blur bg-white/10 sticky top-0">Home</h1>
@@ -26,15 +30,17 @@ return (
                   {
                     res?.error && <div> Something went wrong with the server </div>
                   }
-                  {
-                    res?.data && res.data.map((_tweet)=>(
-                      <Tweet key={_tweet.id} tweet= {tweet}/>
-                   ))
-                  }
+                   res?.data && 
+                  res.data.map(tweet) => 
+                  <Tweet 
+                  key={Tweet.id} 
+                  tweet= {tweet} 
+                  currentuserId={userData.user?.id} 
+                  />
                </div>
             
          </main>
-  )
+  );
 };
  
 export default MainComponent

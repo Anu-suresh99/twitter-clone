@@ -15,19 +15,12 @@ import { isLiked } from '@/app/lib/supabase/queries';
 import { cookies,headers } from 'next/headers';
 import { tweet } from '@/compose-tweet'; 
 type TweetProps= {
-    tweet:Tweettype
+    tweet:any
+    currentuserId?:string
 }
-const Tweet = async ({tweet}:TweetProps) => {
+const Tweet = async ({tweet,currentuserId}:TweetProps) => {
 
-
-  const supabaseServer= createServerSupabaseClient
-
-  const getTweetLikescount = await getLikeCount(tweet.id)
-  const isUserHasLiked = await isLiked({
-     tweetId:tweet.id,
-     userId:supabaseClient.auth.user
-  })
-
+ 
   return (
     <div key={tweet.id} className="border-b-[0.5px] p-4 border-gray-600 flex space-x-4 w-full overflow-hidden">
                          <div>
@@ -37,7 +30,7 @@ const Tweet = async ({tweet}:TweetProps) => {
                          <div className="flex flex-col space-y-2">
                            <div className="flex items-center w-full justify-between">
                             <div className="flex items-center space-x-1 w-full">
-                             <div className="font-bold">{tweet.Profile.full_name ??""}</div>
+                             <div className="font-bold">{tweet.full_name ??""}</div>
                              <div className="text-gray-500">@{tweet.Profile.username }</div>
                              <div className="text-gray-500">
                                < BsDot />
@@ -65,7 +58,8 @@ const Tweet = async ({tweet}:TweetProps) => {
 
                              <LikeButton 
                              tweetId = {tweet.id}
-                             likeCount={getTweetLikescount.count}
+                             likeCount={tweet.likeCount}
+                             isUserHasLiked={Boolean(tweet?.UserHasLiked)}
                              />
                              
                              <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
