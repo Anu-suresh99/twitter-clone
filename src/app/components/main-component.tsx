@@ -3,10 +3,11 @@ import ComposeTweet from "./server-components/compose-tweet";
 import { getTweet } from "../lib/supabase/queries";
 import { dayjs } from "dayjs";
 import {relativeTime} from dayjs/plugin/relativeTime;
-import {Tweet} from "./components/client-components/tweet.tsx";
+import { Tweet,tweet } from "../lib/db/schema";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies,headers } from "next/headers";
 import {SupabaseClient} from '@supabase/auth-helpers-nextjs';
+import { like } from "drizzle-orm";
 
 dayjs.extend (relativeTime)
    
@@ -27,16 +28,26 @@ return (
               <ComposeTweet />
              </div> 
                <div className="flex flex-col ">
-                  {
-                    res?.error && <div> Something went wrong with the server </div>
-                  }
-                   res?.data && 
-                  res.data.map(tweet) => 
-                  <Tweet 
-                  key={Tweet.id} 
-                  tweet= {tweet} 
-                  currentuserId={userData.user?.id} 
-                  />
+               {res &&
+          res.map(({ likes, tweet, profile, hasLiked, replies }) => {
+            return (
+              <Tweet
+                key={tweet.id}
+                tweet={{
+                  tweetDetails: {
+                    ...tweet,
+                  },
+                  userProfile: {
+                    ...profile,
+                  },
+                }}
+                likeCount={like.length}
+                currentUserId={userData.user?.id}
+                hasLiked={hasLiked}
+                repliesCount={replies.length}
+              />
+            );
+          })}
                </div>
             
          </main>

@@ -84,11 +84,11 @@ export default function SupabaseProvider({
                     options: {
                       data: {
                         username,
-                        full_name: fullName,
+                        fullName :fullName
                       },
                     },
                   });
-
+                console.log(signUpError);
                 if (signUpError) {
                   return toast.error(signUpError.message);
                 }

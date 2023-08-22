@@ -32,6 +32,9 @@ dependencies:
   autoprefixer:
     specifier: 10.4.14
     version: 10.4.14(postcss@8.4.27)
+  bun:
+    specifier: ^0.7.3
+    version: 0.7.3
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -744,6 +747,54 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: false
+
+  /@oven/bun-darwin-aarch64@0.7.3:
+    resolution: {integrity: sha512-iNn04lgqEWKzw8O3f3ptx5UPXWlrxl3ZT4TDbGfPvscCeqLaHUczpAp+KwZT3uCqSiBQj17K69sdm0tj/OZg4A==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@oven/bun-darwin-x64-baseline@0.7.3:
+    resolution: {integrity: sha512-/8VteTuekFr+/HCWzTG0KqgFcIIh+bY32KfeghDGgQtKOhSkhxOJn4HLma4/We/F1M1d72azjfonw77jOcXzNA==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@oven/bun-darwin-x64@0.7.3:
+    resolution: {integrity: sha512-u1+EiPlH+nmLJinZQNiQSEpVDRlk1f9BZfhIZ3qTaUE87Uy2RoKlOdIzVEdVo8LPsWWQLXW1IzIjDWtDYf4bBw==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@oven/bun-linux-aarch64@0.7.3:
+    resolution: {integrity: sha512-y9zhxjBpPT+u7i0uyqFvNljG4T5c/S/ui/f8uyYBy9MDqb6V7VgV882i1Z7aXDI2YufEd/kf2zpgGnR+EZk8hQ==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@oven/bun-linux-x64-baseline@0.7.3:
+    resolution: {integrity: sha512-Mq1uDPshs/jyHH8/83GZsFO+nu2yf4sbRQuUaomNvonNViCeC7Ayn7TlbDi6p66335+b+R0y7XqkoMQT0WTLqQ==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
+
+  /@oven/bun-linux-x64@0.7.3:
+    resolution: {integrity: sha512-BA8cbqt8kejncEY442l5CjWMO4PhF0fvSfwA47E3LpQkMW8mVKR/uYEtKEIkEC2bWNmFBSRaKODspQUAHj8xJw==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: false
+    optional: true
 
   /@radix-ui/primitive@1.0.1:
     resolution: {integrity: sha512-yQ8oGX2GVsEYMWGxcovu1uGWPCxV5BFfeeYxqPmuAzUyLT9qmaMXSAhXpb0WrspIeqYzdJpkh2vHModJPgRIaw==}
@@ -1514,6 +1565,21 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.6.0
+    dev: false
+
+  /bun@0.7.3:
+    resolution: {integrity: sha512-3Ri2lEauUR4my9PSYGzSCYisfvBaq+r1bpt/TCe5ZtTxFyrZTFlgDfldVJXGOOCNVXmYpU0mRuotfES1X64kBw==}
+    cpu: [arm64, x64]
+    os: [darwin, linux]
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      '@oven/bun-darwin-aarch64': 0.7.3
+      '@oven/bun-darwin-x64': 0.7.3
+      '@oven/bun-darwin-x64-baseline': 0.7.3
+      '@oven/bun-linux-aarch64': 0.7.3
+      '@oven/bun-linux-x64': 0.7.3
+      '@oven/bun-linux-x64-baseline': 0.7.3
     dev: false
 
   /busboy@1.6.0:

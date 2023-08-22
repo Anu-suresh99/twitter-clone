@@ -6,6 +6,8 @@ import { AnyARecord } from 'dns';
 import {SupabaseClient} from "@supabase/supabase-js";
 import { revalidatePath } from 'next/cache';
 import ComposeTweetForm from '../client-components/compose-tweet-form';
+import { db } from '@/app/lib/db';
+import { tweet } from '@/app/lib/db/schema';
 
 const ComposeTweet = () => {
 
@@ -28,17 +30,23 @@ const ComposeTweet = () => {
    const{data:userData,error:userError}= await SupabaseClient.auth.getUser()
 
    if(userError) return;
+
+   let err= ' '
     
+const res= await db.insert(tweet).values({
+    text:tweet.tostring(),
+    id: randomUUID,
+    profileId:userData.user.id
+  }).returning().catch((error) =>{
+    console.log(error)
+    err=  "something wrong with server"
+  })
 
-   const {data,error} = await supabaseServer.from("tweets").insert({
-    profiles_id: userData.user.id,
-    text: tweet.toString(),
-    id: randomUUID()
-  });
 
+  console.log(res)
   revalidatePath('/')
 
-   return  {data,error};  
+   return  {data:res,error:err};  
 }  
   return ( <ComposeTweetForm serverAction={submitTweet} />);
 };
