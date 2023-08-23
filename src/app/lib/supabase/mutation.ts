@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { supabaseServer } from ".";
 import { revalidatePath } from "next/cache";
 import { db } from "../db";
-import { likes, replies, tweets } from "../db/schema";
+import { like, replies, tweet } from "../db/schema";
 import { revalidate } from "@/app/page";
 
 export const likeTweet = async({
@@ -14,15 +14,14 @@ export const likeTweet = async({
   tweetId:string,
   userId:string
 }) => {
+  const res= await db.insert(like).values({
 
-  
-  const {data,error}= await supabaseServer.from('likes').insert({
-       id:randomUUID,
-       tweetid:tweetId,
-       userid:userId
+       tweetId,
+       userId
+    }).catch((err)=>{
+      console.log(err)
     })
     revalidatePath ('/')
-    console.log({data,error});
   };
 
 
@@ -55,7 +54,7 @@ export const reply = async ({
 
   if (replyText === "") return;
 
-  await db.insert(tweets).values({
+  await db.insert(tweet).values({
     text: replyText,
     profileId: userId,
     isReply: true,

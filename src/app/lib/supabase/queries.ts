@@ -1,107 +1,179 @@
-"use server"
+"use server";
 
-
-import { Database } from "@/lib/supabase.types";
+import { Database } from "../supabase.types";
 import { supabaseServer } from ".";
-import pool from "pg-pool";
 import { db } from "../db";
-import { profiles, tweet } from "../db/schema";
-import { likes } from "../../../../migrations/schema";
-import { equal } from "assert";
-import { profile } from "console";
-import { desc, eq } from "drizzle-orm";
+import {
+  Like,
+  Profile,
+  Tweet,
+  like,
+  profiles,
+  tweet,
+  tweetsReplies,
+} from "../db/schema";
+import { and, desc, eq, exists } from "drizzle-orm";
 
-const supabaseUrl= process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseSecretKey= process.env.SUPABASE_SECRET_KEY;
-
-export type Tweettype = Database ["public"]["Tables"]["tweet"]["Row"] & {
-  Profile : Pick <Database ["public"]["Tables"]["profiles"]["Row"], 'full_name'|'username'>; 
+export type TweetType = Database["public"]["Tables"]["tweet"]["Row"] & {
+  profiles: Pick<
+    Database["public"]["Tables"]["profiles"]["Row"],
+    "full_name" | "username"
+  >;
 };
-
-
-//const querywithCurentUserId=
-//`SELECT tweet.*,profile.username , profile.full_name , COUNT(likeid) AS likecount
-//EXISTS (
- //SELECT 1
- //FROM like
- //WHERE like.tweetid = tweet.id
- //AND like.userid = $1
-//)AS userhasliked
-//FROM tweet
-//LEFT JOIN like ON tweet.id = like.tweetid
-//JOIN profile ON tweet.profileid = profile.id
-//GROUP BY  tweet.id
-//ORDER BY tweet.created_at DESC;
-//`;
-
-//const querywithoutCurrentUserID= 
-//'SELECT tweet.*,profile.username , profile.full_name , COUNT(likeid) AS likecount
-  //FROM tweet
-  //LEFT JOIN like ON tweet.id = like.tweetid
-  //JOIN profile ON tweet.profileid = profile.id
- // GROUP BY  tweet.id
- // ORDER BY tweet.created_at DESC;
-//';
-
-export const getTweet= async (currentUserId?:string) => {
-
-try{
-
-//const res= await db.query.tweet.findMany({
- // with:{
-   // profile: {
-   //   columns:{
-    //    username:true,
-    //    fullName:true
-   //   },
-   // },
- // },
-//});
-
-
-let err
-console.log(currentUserId);
-const res= (await db
-  .select()
-  .from (tweet)
-  .leftJoin(likes,eq(tweet.id,likes.tweetId)))
-  .innerJoin(profiles,eq(tweet.profileId,profile.id))
-  .orderBy(desc(tweet.createdAt))
-  .limit(1)
-  .catch(()=>{
-    err="something went wrong while fethching all the tweet"
-  })
-
-   return {data:res,error:err};
-}catch (error) {
-  return {error:'something wrong with quering the db'}
-}
-};
-
-    export const getLikeCount = async (tweetId:string)=> {
-      const res= await supabaseServer
-      .from ('like')
-      .select("id",{
-        count:"exact",
+export const getTweets = async ({
+  currentUserID,
+  getSingleTweetId,
+  limit,
+  orderBy,
+  replyId,
+  profileUsername,
+}: {
+  currentUserID?: string;
+  getSingleTweetId?: string;
+  orderBy?: boolean;
+  limit?: number;
+  replyId?: string;
+  profileUsername?: string;
+}) => {
+  try {
+    let query = db
+      .select({
+        tweet,
+        profiles,
+        ...(currentUserID
+          ? {
+              hasLiked: exists(
+                db
+                  .select()
+                  .from(like)
+                  .where(
+                    and(
+                      eq(like.tweetId, tweet.id),
+                      eq(like.userId, currentUserID)
+                    )
+                  )
+              ),
+            }
+          : {}),
+        like,
+        tweetsReplies,
       })
-      .eq('tweetid',tweetId)
+      .from(tweet)
+      .where(eq(tweet.isReply, Boolean(replyId)))
+      .leftJoin(like, eq(tweet.id, like.tweetId))
+      .leftJoin(tweetsReplies, eq(tweet.id, tweetsReplies.replyId))
+      .innerJoin(profiles, eq(tweet.profileId, profiles.id))
+      .orderBy(desc(tweet.createdAt));
 
-      return res;
-    };
+    if (orderBy) {
+      query = query.orderBy(desc(tweet.createdAt));
+    }
 
-    export const isLiked = async ({tweetId,userId}:{
-      tweetId:string,
-      userId?:string
-    }) => {
+    if (getSingleTweetId) {
+      query = query.where(eq(tweet.id, getSingleTweetId));
+    }
 
-      if(!userId)  return false;
-      const{data,error}=await supabaseServer
-      .from ('like')
-      .select("id")
-      .eq('tweetid',tweetId)
-      .eq("userid",userId)
-      .single()
+    if (limit) {
+      query = query.limit(limit);
+    }
 
+    if (replyId) {
+      query = query.where(eq(tweet.replyId, replyId));
+    }
 
-     return Boolean(data?.id)
-    };
+    if (profileUsername) {
+      query = query.where(
+        and(eq(profiles.username, profileUsername), eq(tweet.isReply, false))
+      );
+    }
+
+    const rows = await query;
+
+    if (rows) {
+      const result = rows.reduce<
+        Record<
+          string,
+          {
+            tweet: Tweet;
+            likes: Like[];
+            profile: Profile;
+            hasLiked: boolean;
+            replies: Tweet[];
+          }
+        >
+      >((acc, row) => {
+        const tweet = row.tweet;
+        const like = row.like;
+        const profile = row.profiles;
+        const hasLiked = Boolean(row.hasLiked);
+        const reply = row.tweetsReplies;
+
+        if (!acc[tweet.id]) {
+          acc[tweet.id] = {
+            tweet,
+            likes: [],
+            profile,
+            hasLiked,
+            replies: [],
+          };
+        }
+
+        if (like) {
+          acc[tweet.id].likes.push(like);
+          const ids = acc[tweet.id].likes.map(({ id }) => id);
+          const filteredLikesArr = acc[tweet.id].likes.filter(
+            ({ id }, index) => !ids.includes(id, index + 1)
+          );
+          acc[tweet.id].likes = filteredLikesArr;
+        }
+
+        if (reply) {
+          acc[tweet.id].replies.push(reply);
+          const ids = acc[tweet.id].replies.map(({ id }) => id);
+          const filteredRepliesArr = acc[tweet.id].replies.filter(
+            ({ id }, index) => !ids.includes(id, index + 1)
+          );
+          acc[tweet.id].replies = filteredRepliesArr;
+        }
+
+        return acc;
+      }, {});
+
+      const data = Object.values(result);
+      return data;
+    }
+  } catch (error) {
+    console.log(error);
+    // return { error: "something wrong with querying the db" };
+  }
+};
+
+export const getLikesCount = async (tweetId: string) => {
+  const res = await supabaseServer
+    .from("likes")
+    .select("id", {
+      count: "exact",
+    })
+    .eq("tweet_id", tweetId);
+
+  return res;
+};
+
+export const isLiked = async ({
+  tweetId,
+  userId,
+}: {
+  tweetId: string;
+  userId?: string;
+}) => {
+  if (!userId) return false;
+
+  const { data, error } = await supabaseServer
+    .from("likes")
+    .select("id")
+    .eq("tweet_id", tweetId)
+    .eq("user_id", userId)
+    .single();
+
+  return Boolean(data?.id);
+};

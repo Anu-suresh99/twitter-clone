@@ -1,77 +1,99 @@
-"use server"
+"use client";
 
-import React from 'react'
-import { BiMessageRounded } from "react-icons/bi";
-import {  AiOutlineRetweet } from "react-icons/ai";
-import {IoMdStats} from 'react-icons/io';
-import {FiShare} from 'react-icons/fi';
-import { BsDot, BsThreeDots } from "react-icons/bs";
-import { dayjs } from "dayjs";
-import { Tweettype } from '@/app/lib/supabase/queries';
-import {createServerSupabaseClient,createServerComponentClient, SupabaseClient} from '@supabase/auth-helpers-nextjs';
-import LikeButton from './like-button';
-import { getLikeCount } from '@/app/lib/supabase/queries';
-import { isLiked } from '@/app/lib/supabase/queries';
-import { cookies,headers } from 'next/headers';
-import { tweet } from '@/compose-tweet'; 
-type TweetProps= {
-    tweet:any
-    currentuserId?:string
-}
-const Tweet = async ({tweet,currentuserId}:TweetProps) => {
+import { TweetType,getLikesCount, isLiked  } from "@/app/lib/supabase/queries";
+import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
+import { AiOutlineRetweet } from "react-icons/ai";
+import { IoShareOutline, IoStatsChart } from "react-icons/io5";
 
- 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+import LikeButton from "./like-button";
+import { Profile,Tweet } from "@/app/lib/db/schema";
+
+import ReplyDialog from "./reply-dialog";
+import { useRouter } from "next/navigation";
+import{ProfileAvatar} from "./profile-avatar";
+
+dayjs.extend(relativeTime);
+
+type TweetProps = {
+  tweet: {
+    userProfile: Profile;
+    tweetDetails: Tweet;
+  };
+  currentUserId?: string;
+  likesCount: number;
+  hasLiked: boolean;
+  repliesCount: number;
+};
+
+const Tweet = async ({
+  tweet,
+  likesCount,
+  hasLiked,
+  repliesCount,
+}: TweetProps) => {
+  const router = useRouter();
+
   return (
-    <div key={tweet.id} className="border-b-[0.5px] p-4 border-gray-600 flex space-x-4 w-full overflow-hidden">
-                         <div>
-                          <div className="w-10 h-10 bg-slate-500 rounded-full"/>
-                         </div>
-                         <div>
-                         <div className="flex flex-col space-y-2">
-                           <div className="flex items-center w-full justify-between">
-                            <div className="flex items-center space-x-1 w-full">
-                             <div className="font-bold">{tweet.full_name ??""}</div>
-                             <div className="text-gray-500">@{tweet.Profile.username }</div>
-                             <div className="text-gray-500">
-                               < BsDot />
-                             </div>
-                             <div className="text-gray-500">
-                              {dayjs(tweet.created_at).fromNow()}
-                             </div>
-                             </div>
-                             <div>
-                               <BsThreeDots />
-                             </div>
-                           </div>
-                           </div>
-                           <div className="text-black text-base">
-                               {tweet.text}
-                           </div>
-                           <div className="bg-slate-300 aspect-square w-full h-80 rounded-xl"></div>
-                           <div className="flex items-center justify-around w-full">
-                             <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
-                                    <BiMessageRounded /> 
-                             </div>
-                             <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
-                                    <AiOutlineRetweet /> 
-                             </div>
+    <>
+      <div className="border-b-[0.5px]  border-gray-600 p-2 flex space-x-4 w-full">
+        <div>
+          <ProfileAvatar
+            username={tweet.userProfile.username}
+            avatarUrl={tweet.userProfile.avatarUrl}
+            isOnTimeline={true}
+          />
+        </div>
+        <div className="flex flex-col w-full">
+          <div className="flex items-center w-full justify-between">
+            <div className="flex items-center space-x-1 w-full">
+              <div className="font-bold">
+                {tweet.userProfile.fullName ?? ""}
+              </div>
+              <div className="text-gray-500">@{tweet.userProfile.username}</div>
+              <div className="text-gray-500">
+                <BsDot />
+              </div>
+              <div className="text-gray-500">
+                {dayjs(tweet.tweetDetails.createdAt).fromNow()}
+              </div>
+            </div>
+            <div>
+              <BsThreeDots />
+            </div>
+          </div>
+          <div
+            onClick={() => {
+              router.push(`/tweet/${tweet.tweetDetails.id}`);
+            }}
+            className="text-white text-base w-full cursor-pointer hover:bg-white/5 transition-all"
+          >
+            {tweet.tweetDetails.text}
+          </div>
+          {/* <div className="bg-slate-400 aspect-square w-full h-80 rounded-xl mt-2"></div> */}
+          <div className="flex items-center justify-start space-x-20 mt-2 w-full">
+            <ReplyDialog tweet={tweet} repliesCount={repliesCount} />
+            <div className="rounded-full hover:bg-white/10 transition duration-200 p-3 cursor-pointer">
+              <AiOutlineRetweet />
+            </div>
+            <LikeButton
+              tweetId={tweet.tweetDetails.id}
+              likesCount={likesCount}
+              isUserHasLiked={hasLiked}
+            />
+            <div className="rounded-full hover:bg-white/10 transition duration-200 p-3 cursor-pointer">
+              <IoStatsChart />
+            </div>
+            <div className="rounded-full hover:bg-white/10 transition duration-200 p-3 cursor-pointer">
+              <IoShareOutline />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
-                             <LikeButton 
-                             tweetId = {tweet.id}
-                             likeCount={tweet.likeCount}
-                             isUserHasLiked={Boolean(tweet?.UserHasLiked)}
-                             />
-                             
-                             <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
-                                    <IoMdStats /> 
-                             </div>
-                             <div className="rounded-full hover:bg-black/20 p-3 transition duration-200 cursor-pointer"> 
-                                    <FiShare /> 
-                             </div>
-                           </div>
-                         </div> 
-                      </div>
-  )
-}
-
-export default Tweet
+export default Tweet;
