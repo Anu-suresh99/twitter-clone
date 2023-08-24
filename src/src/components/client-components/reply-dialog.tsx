@@ -1,17 +1,17 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/ui/dialog.tsx";
+import { Dialog,DialogContent,DialogTrigger } from "@radix-ui/react-dialog";
 import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Tweet,Profile } from "@/app/lib/db/schema";
-import { Input } from "../ui/input";
-import { useSupabase } from "@/app/supabase-provider";
+import { Tweet,Profile } from "@/src/lib/db/schema";
+import { Input } from "../ui/ui/input";
+import { useSupabase } from "@/src/supabase-provider";
 import { toast } from "sonner";
-import { reply } from "@/app/lib/supabase/mutation";
+import { reply } from "@/src/lib/supabase/mutation";
 
 dayjs.extend(relativeTime);
 

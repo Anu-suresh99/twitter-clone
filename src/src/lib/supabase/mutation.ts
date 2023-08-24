@@ -5,7 +5,7 @@ import { supabaseServer } from ".";
 import { revalidatePath } from "next/cache";
 import { db } from "../db";
 import { like, replies, tweet } from "../db/schema";
-import { revalidate } from "@/app/page";
+import { revalidate } from "@/src/page";
 
 export const likeTweet = async({
   tweetId,

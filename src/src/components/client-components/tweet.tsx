@@ -1,6 +1,6 @@
 "use client";
 
-import { TweetType,getLikesCount, isLiked  } from "@/app/lib/supabase/queries";
+import { TweetType,getLikesCount,isLiked } from "@/src/lib/supabase/queries";
 import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { IoShareOutline, IoStatsChart } from "react-icons/io5";
@@ -9,11 +9,10 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import LikeButton from "./like-button";
-import { Profile,Tweet } from "@/app/lib/db/schema";
+import { Profile,Tweet } from "@/src/lib/db/schema";
 
 import ReplyDialog from "./reply-dialog";
-import { useRouter } from "next/navigation";
-import{ProfileAvatar} from "./profile-avatar";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime);
 
@@ -28,7 +27,7 @@ type TweetProps = {
   repliesCount: number;
 };
 
-const Tweet = async ({
+const Tweet =  ({
   tweet,
   likesCount,
   hasLiked,
@@ -40,11 +39,7 @@ const Tweet = async ({
     <>
       <div className="border-b-[0.5px]  border-gray-600 p-2 flex space-x-4 w-full">
         <div>
-          <ProfileAvatar
-            username={tweet.userProfile.username}
-            avatarUrl={tweet.userProfile.avatarUrl}
-            isOnTimeline={true}
-          />
+        <div className="w-10 h-10 bg-slate-500 rounded-full"/>
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center w-full justify-between">

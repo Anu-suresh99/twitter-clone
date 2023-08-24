@@ -1,5 +1,4 @@
 import { pgTable, foreignKey, unique, pgEnum, uuid, timestamp, text, uniqueIndex, boolean, primaryKey } from "drizzle-orm/pg-core"
-
 import { sql } from "drizzle-orm"
 export const keyStatus = pgEnum("key_status", ['expired', 'invalid', 'valid', 'default'])
 export const keyType = pgEnum("key_type", ['stream_xchacha20', 'secretstream', 'secretbox', 'kdf', 'generichash', 'shorthash', 'auth', 'hmacsha256', 'hmacsha512', 'aead-det', 'aead-ietf'])
@@ -8,18 +7,16 @@ export const factorStatus = pgEnum("factor_status", ['verified', 'unverified'])
 export const aalLevel = pgEnum("aal_level", ['aal3', 'aal2', 'aal1'])
 export const codeChallengeMethod = pgEnum("code_challenge_method", ['plain', 's256'])
 
-
 export const bookmark = pgTable("bookmark", {
 	id: uuid("id").primaryKey().notNull(),
-	userid: uuid("userid").references(() => profiles.id, { onDelete: "cascade" } ),
-	tweetid: uuid("tweetid").references(() => tweet.id, { onDelete: "cascade" } ),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).default(timezone('utc'::text, now())).notNull(),
-},
-(table) => {
+	userid: uuid("userid").references(() => profiles.id, { onDelete: "cascade" }),
+	tweetid: uuid("tweetid").references(() => tweet.id, { onDelete: "cascade" }),
+	createdAt: timestamp("created_at", { withTimezone: true }).default(sql`NOW()`).notNull(),
+  }, (table) => {
 	return {
-		bookmarkUnique: unique("bookmark_unique").on(table.userid, table.tweetid),
-	}
-});
+	  bookmarkUnique: unique("bookmark_unique").on(table.userid, table.tweetid),
+	};
+  });
 
 export const hashtag = pgTable("hashtag", {
 	id: uuid("id").primaryKey().notNull(),
@@ -30,7 +27,7 @@ export const like = pgTable("like", {
 	id: uuid("id").primaryKey().notNull(),
 	userid: uuid("userid").references(() => profiles.id, { onDelete: "cascade" } ),
 	tweetid: uuid("tweetid").references(() => tweet.id, { onDelete: "cascade" } ),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).default(timezone('utc'::text, now())).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).default(sql`NOW()`).notNull(),
 },
 (table) => {
 	return {
@@ -50,13 +47,13 @@ export const tweet = pgTable("tweet", {
 	id: uuid("id").primaryKey().notNull(),
 	text: text("text"),
 	authorid: uuid("authorid"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).default(timezone('utc'::text, now())).notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).default(timezone('utc'::text, now())).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).default(sql`NOW()`).notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).default((sql `now()`)).notNull(),
 });
 
 export const profiles = pgTable("profiles", {
 	id: uuid("id").primaryKey().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).default(timezone('utc'::text, now())).notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).default((sql `now()`)).notNull(),
 	username: text("username").notNull(),
 	fullName: text("full_name"),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),

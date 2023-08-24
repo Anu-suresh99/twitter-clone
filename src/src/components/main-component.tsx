@@ -2,13 +2,13 @@ import ComposeTweet from "./server-components/compose-tweet";
 
 import { getTweets } from "../lib/supabase/queries";
 import Tweet from "./client-components/tweet";
-import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies, headers } from "next/headers";
 
 const MainComponent = async () => {
-  const supabaseClient = createServerComponentSupabaseClient({
+  const supabaseClient = createServerComponentClient({
     cookies,
-    headers,
+    
   });
 
   const { data: userData, error: userError } =
@@ -27,7 +27,7 @@ const MainComponent = async () => {
       </div>
       <div className="w-full">
         {res &&
-          res.map(({ like, tweet, profile, hasLiked, replies }) => {
+          res.map(({ likes, tweet, profile, hasLiked, replies }) => {
             return (
               <Tweet
                 key={tweet.id}
@@ -39,7 +39,7 @@ const MainComponent = async () => {
                     ...profile,
                   },
                 }}
-                likesCount={like.length}
+                likesCount={likes.length}
                 currentUserId={userData.user?.id}
                 hasLiked={hasLiked}
                 repliesCount={replies.length}

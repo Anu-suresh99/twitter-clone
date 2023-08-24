@@ -5,7 +5,7 @@ import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 
 import type { SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/lib/supabase.type";
+import { Database } from "./lib/supabase.types";
 import { Dialog, DialogContent } from "./components/ui/ui/dialog";
 import { Input } from "./components/ui/ui/input";
 import { Button } from "./components/ui/ui/button";
