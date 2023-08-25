@@ -1,12 +1,8 @@
-import Tweet from "@/src/components/client-components/tweet";
-import { db } from "@/src/lib/db";
-import { likes,profiles,tweets,replies } from "../../../../migrations/schema";
+import Tweet from "@/components/client-components/tweet";
 import React from "react";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies, headers } from "next/headers";
-import { and, desc, eq, exists } from "drizzle-orm";
-import { getTweets } from "@/src/lib/supabase/queries";
-import { BsDot, BsThreeDots } from "react-icons/bs";
+import { getTweets } from "../../lib/supabase/queries";
 import { redirect } from "next/navigation";
 
 const TweetPage = async ({ params }: { params: { id: string } }) => {
@@ -64,7 +60,7 @@ const TweetPage = async ({ params }: { params: { id: string } }) => {
             />
           );
         })}
-    </main>
+    </main> 
   );
 };
 

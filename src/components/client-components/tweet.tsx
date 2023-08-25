@@ -1,6 +1,6 @@
 "use client";
 
-import { TweetType,getLikesCount,isLiked } from "@/src/lib/supabase/queries";
+import { TweetType,getLikesCount,isLiked } from "../../lib/supabase/queries";
 import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { IoShareOutline, IoStatsChart } from "react-icons/io5";
@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import LikeButton from "./like-button";
-import { Profile,Tweet } from "@/src/lib/db/schema";
+import { Profile,Tweet } from "../../lib/db/schema";
 
 import ReplyDialog from "./reply-dialog";
 import { useRouter } from "next/router";

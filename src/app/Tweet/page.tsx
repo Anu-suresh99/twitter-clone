@@ -1,5 +1,5 @@
 
-import MainComponent from "./components/main-component";
+import MainComponent from "../../components/main-component";
 
 export const revalidate= 0;
 

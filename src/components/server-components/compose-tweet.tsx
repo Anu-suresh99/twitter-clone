@@ -5,9 +5,9 @@ import { randomUUID } from "crypto";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 import { revalidatePath } from "next/cache";
-import ComposeTweetForm from "../client-components/compose-tweet-form";
-import { db } from "@/src/lib/db";
-import { tweets } from "../../../../migrations/schema";
+import ComposeTweetForm from "../../../src/components/client-components/compose-tweet-form";
+import { db } from "../../lib/db";
+import { tweets } from "../../../migrations/schema";
 
 const ComposeTweet = () => {
   async function submitTweet(formData: FormData) {

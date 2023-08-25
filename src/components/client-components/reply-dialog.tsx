@@ -7,11 +7,11 @@ import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { Tweet,Profile } from "@/src/lib/db/schema";
+import { Tweet,Profile } from "../../lib/db/schema";
 import { Input } from "../ui/ui/input";
-import { useSupabase } from "@/src/supabase-provider";
+import { useSupabase } from "@/app/Tweet/supabase-provider";
 import { toast } from "sonner";
-import { reply } from "@/src/lib/supabase/mutation";
+import { reply } from "../../lib/supabase/mutation";
 
 dayjs.extend(relativeTime);
 

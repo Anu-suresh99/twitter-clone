@@ -2,8 +2,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import SupabaseProvider from './supabase-provider'
-import LeftSidebar from "./components/left-sidebar";
-import RightSection from "./components/right-section";
+import LeftSidebar from "../../components/left-sidebar";
+import RightSection from "../../components/right-section";
 
 const inter = Inter({ subsets: ['latin'] })
 
