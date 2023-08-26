@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
-     appDoir:true,
+     appDir:true,
 
         serverActions: true,
       },
