@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { Tweet,Profile } from "../../lib/db/schema";
-import { Input } from "../ui/ui/input";
+import { Input } from "../ui/input";
 import { useSupabase } from "@/app/Tweet/supabase-provider";
 import { toast } from "sonner";
 import { reply } from "../../lib/supabase/mutation";
