@@ -1,9 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import SupabaseProvider from './supabase-provider'
-import LeftSidebar from "../../components/left-sidebar";
-import RightSection from "../../components/right-section";
+import SupabaseProvider from './tweet/supabase-provider'
+import LeftSidebar from "@/components/left-sidebar";
+import RightSection from "@/components/right-section";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,14 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-       
+
         <div className="w-full h-full flex justify-center items -center relative" >
-     <div className="xl:max-w-[70vm] w-full h-full flex relative ">
-         <LeftSidebar />
-         <SupabaseProvider>{children}</SupabaseProvider>
-         <RightSection />
-      </div>
-   </div>
+          <div className="xl:max-w-[70vm] w-full h-full flex relative ">
+            <LeftSidebar />
+            <SupabaseProvider>{children}</SupabaseProvider>
+            <RightSection />
+          </div>
+        </div>
       </body>
     </html>
   )

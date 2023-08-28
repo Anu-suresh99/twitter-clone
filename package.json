@@ -9,7 +9,7 @@
     "lint": "next lint",
     "introspect": "drizzle-kit introspect:pg",
     "generate": "drizzle-kit generate:pg",
-    "migrate": "pnpm bun run src/app/lib/db/migrate.tsx"
+    "migrate": "pnpm bun run src/lib/db/migrate.tsx"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.4",

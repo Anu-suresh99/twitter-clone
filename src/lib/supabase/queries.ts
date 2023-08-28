@@ -40,23 +40,6 @@ export const getTweets = async ({
       .select({
         tweet,
         profiles,
-        ...(currentUserID
-          ? {
-              hasLiked: exists(
-                db
-                  .select()
-                  .from(like)
-                  .where(
-                    and(
-                      eq(like.tweetId, tweet.id),
-                      eq(like.userId, currentUserID)
-                    )
-                  )
-              ),
-            }
-          : {}),
-        like,
-        tweetsReplies,
       })
       .from(tweet)
       .where(eq(tweet.isReply, Boolean(replyId)))

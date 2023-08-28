@@ -25,7 +25,7 @@ const TweetPage = async ({ params }: { params: { id: string } }) => {
   const repliesRes = await getTweets({
     currentUserID: userData.user?.id,
     orderBy: true,
-    replyId: tweet[0].tweet.id,
+    replyId: tweet[0]?.tweet.id,
   });
 
   return (
@@ -60,7 +60,7 @@ const TweetPage = async ({ params }: { params: { id: string } }) => {
             />
           );
         })}
-    </main> 
+    </main>
   );
 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { TweetType,getLikesCount,isLiked } from "../../lib/supabase/queries";
+import { TweetType, getLikesCount, isLiked } from "../../lib/supabase/queries";
 import { BsChat, BsDot, BsThreeDots } from "react-icons/bs";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { IoShareOutline, IoStatsChart } from "react-icons/io5";
@@ -9,10 +9,10 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import LikeButton from "./like-button";
-import { Profile,Tweet } from "../../lib/db/schema";
+import { Profile, Tweet } from "../../lib/db/schema";
 
 import ReplyDialog from "./reply-dialog";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 dayjs.extend(relativeTime);
 
@@ -27,7 +27,7 @@ type TweetProps = {
   repliesCount: number;
 };
 
-const Tweet =  ({
+const Tweet = ({
   tweet,
   likesCount,
   hasLiked,
@@ -39,7 +39,7 @@ const Tweet =  ({
     <>
       <div className="border-b-[0.5px]  border-gray-600 p-2 flex space-x-4 w-full">
         <div>
-        <div className="w-10 h-10 bg-slate-500 rounded-full"/>
+          <div className="w-10 h-10 bg-slate-500 rounded-full" />
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center w-full justify-between">

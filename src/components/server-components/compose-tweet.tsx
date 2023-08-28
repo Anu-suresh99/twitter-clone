@@ -1,13 +1,12 @@
 import React from "react";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
-import { SupabaseClient } from "@supabase/supabase-js";
 
 import { revalidatePath } from "next/cache";
 import ComposeTweetForm from "../../../src/components/client-components/compose-tweet-form";
 import { db } from "../../lib/db";
-import { tweets } from "../../../migrations/schema";
+import { tweet as dbTweet } from "../../lib/db/schema";
 
 const ComposeTweet = () => {
   async function submitTweet(formData: FormData) {
@@ -21,23 +20,15 @@ const ComposeTweet = () => {
       cookies,
     });
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
-
-    if (!supabaseUrl || !supabaseSecretKey)
-      return { error: { message: "supabase credentials are not provided!" } };
-
-    const supabaseServer = new SupabaseClient(supabaseUrl, supabaseSecretKey);
-
     const { data: userData, error: userError } =
       await supabaseClient.auth.getUser();
 
     if (userError) return;
 
     let err = "";
-
+    console.log('userData', userData)
     const res = await db
-      .insert(tweets)
+      .insert(dbTweet)
       .values({
         text: tweet.toString(),
         id: randomUUID(),

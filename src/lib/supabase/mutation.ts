@@ -1,45 +1,43 @@
 "use server";
 
-import { randomUUID } from "crypto";
 import { supabaseServer } from ".";
 import { revalidatePath } from "next/cache";
 import { db } from "../db";
-import { like, replies, tweet } from "../db/schema";
-import { revalidate } from "@/app/Tweet/page";
+import { like, tweet } from "../db/schema";
 
-export const likeTweet = async({
+export const likeTweet = async ({
   tweetId,
   userId
-}:{
-  tweetId:string,
-  userId:string
+}: {
+  tweetId: string,
+  userId: string
 }) => {
-  const res= await db.insert(like).values({
+  const res = await db.insert(like).values({
 
-       tweetId,
-       userId
-    }).catch((err)=>{
-      console.log(err)
-    })
-    revalidatePath ('/')
-  };
-
-
-  export const unlikeTweet = async({
     tweetId,
     userId
-  }:{
-    tweetId:string,
-    userId:string
-  }) => {
-    const {data,error}= await supabaseServer
+  }).catch((err) => {
+    console.log(err)
+  })
+  revalidatePath('/')
+};
+
+
+export const unlikeTweet = async ({
+  tweetId,
+  userId
+}: {
+  tweetId: string,
+  userId: string
+}) => {
+  const { data, error } = await supabaseServer
     .from('likes')
     .delete()
-    .eq('tweetid',tweetId)
-    .eq('userid',userId)
-    revalidatePath ('/')
-    console.log({data,error});
-    };
+    .eq('tweetid', tweetId)
+    .eq('userid', userId)
+  revalidatePath('/')
+  console.log({ data, error });
+};
 
 export const reply = async ({
   tweetId,
