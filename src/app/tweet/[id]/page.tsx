@@ -2,7 +2,7 @@ import Tweet from "@/components/client-components/tweet";
 import React from "react";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies, headers } from "next/headers";
-import { getTweets } from "../../lib/supabase/queries";
+import { getTweets } from "../../../lib/supabase/queries";
 import { redirect } from "next/navigation";
 
 const TweetPage = async ({ params }: { params: { id: string } }) => {

@@ -63,7 +63,7 @@ const Tweet = ({
             onClick={() => {
               router.push(`/tweet/${tweet.tweetDetails.id}`);
             }}
-            className="text-white text-base w-full cursor-pointer hover:bg-white/5 transition-all"
+            className="dark:text-white text-base w-full cursor-pointer hover:bg-white/5 transition-all"
           >
             {tweet.tweetDetails.text}
           </div>
